@@ -39,8 +39,6 @@
 
 4. this指向
 
-   this指向
-
    - 箭头函数
    - bind、call、apply
 
@@ -282,9 +280,9 @@
 
    - React Native
    - Electron
+   - Flutter
    - 小程序（微信小程序、支付宝小程序）
-   - Weex
-   - Uniapp、Taro、Chamelon 
+   - Weex、uniapp、Taro、Chamelon 
 
 2. 防抖和节流
 
