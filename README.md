@@ -146,15 +146,20 @@
    - setState
    - Redux
    - MobX
-10. 路由
+10. MobX原理
+    - 如何触发React组件更新的
+    - Object.defineProperty和Proxy区别
+11. 路由
     - React-Router
     - 路由实现原理
     - hash路由、history.pushState
-11. 组件库
+12. 组件库
     - AntD
-12. hooks
+13. hooks
     - useState
     - useEffect
+14. React DOM的API
+15. SSR服务端渲染的原理
 
 ## 工程化构建
 
@@ -326,7 +331,9 @@
     - new操作符
     - instanceof
     - bind、call、apply
-    - 数据方法
+    - 数组方法
     - Promise
 
 12. 数组去重方式
+
+13. 国际化 i18n
