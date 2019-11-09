@@ -183,6 +183,64 @@ SVG图片的特点是缩放后不会出现锯齿这样的失真现象。
 
    clip-path="url(#id)"
 
+### Path命令
+
+1. M、m  移动至
+
+2. L、l  画线至
+
+3. H、h  水平画线至
+
+4. V、v  垂直画线至
+
+5. Z、z  结束路径
+
+6. A、a  绘制弧线
+
+    `A rx ry x-axis-rotation large-arc-flag sweep-flag x y` 
+
+   `a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy`
+
+   x-axis-rotation表示弧形的旋转情况，在屏幕2d层面的顺时针旋转；
+
+   large-arc-flag表示绘制大角度弧还是小角度弧，0表示小角度，1表示大角度；
+
+   sweep-flag表示弧线的方向，0表示从起点到终点沿逆时针画弧，1表示从起点到终点沿顺时针画弧。
+
+7. C、c  三次贝塞尔曲线
+
+   `C x1 y1, x2 y2, x y`
+
+   `c dx1 dy1, dx2 dy2, dx dy`
+
+   (x1, y1)、(x2, y2)是控制点，(x, y)是终点。
+
+   控制点描述的是曲线起始点的斜率，曲线上各个点的斜率，是从起点斜率到终点斜率的渐变过程。
+
+8. S、s  简写三次贝塞尔曲线
+
+   `S x2 y2, x y`
+
+   `s dx2 dy2, dx dy`
+
+   如果S命令跟在一个C或S命令后面，则它的第一个控制点会被假设成前一个命令曲线的第二个控制点的中心对称点。如果S命令单独使用，前面没有C或S命令，那么当前点将作为第一个控制点，这时候相当于Q命令。
+
+9. Q、q  二次贝塞尔曲线
+
+   `Q x1 y1, x y`
+
+   `q dx1 dy1, dx dy`
+
+   (x1, y1)是控制点，(x, y)是终点。
+
+10. T、t  简写二次贝塞尔曲线
+
+    `T x y`
+
+    `t dx dy`
+
+    T命令前是Q或T命令时，会和S命令一样推断其控制点；如果单独使用，那么画出来的会是一条直线。
+
 ### 接口
 
 1. ` SVGGraphicsElement.getBBox()`：计算元素相对于其当前所在SVG空间的坐标边界，返回结果是一个SVGRect对象，包含`x`、`y`、`width`、`height`属性。
@@ -196,4 +254,8 @@ SVG图片的特点是缩放后不会出现锯齿这样的失真现象。
 1. 移除了xlink命名空间（不知道支持性怎么样）
 
    >  **Note:** SVG 2 removed the need for the `xlink` namespace, so instead of `xlink:href` you should use `href`. 
+
+### 参考资料
+
+1. [SVG——MDN]( https://developer.mozilla.org/zh-CN/docs/Web/SVG )
 
