@@ -10,17 +10,19 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
 
 **线宽**： 线宽是指给定路径的中心到两边的粗细。换句话说就是在路径的两边各绘制线宽的一半。因为画布的坐标并不和像素直接对应，当需要获得精确的水平或垂直线的时候要特别注意。 宽度是 1.0 的线条，实际填充区域仅仅延伸至路径两旁各一半像素。而这半个像素又会以近似的方式进行渲染，这意味着那些像素只是部分着色，结果就是以实际笔触颜色一半色调的颜色来填充整个区域。这就是为何宽度为 1.0 的线并不准确的原因。*解决方案：*1. 线条使用类似1.5这样的定位，以使线条边缘正好落在像素边界；2. 使用偶数线宽，可以将canvas画布设为2倍，再结合设置CSS样式使其缩小回来（待验证）。
 
-**填充规则**： 当我们用到 `fill`（或者 [`clip`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clip)和[`isPointinPath`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/isPointInPath) ）你可以选择一个填充规则，该填充规则根据某处在路径的外面或者里面来决定该处是否被填充，这对于自己与自己路径相交或者路径被嵌套的时候是有用的。可选值：`nonzero`（默认）、`evenodd` 。
+**填充规则**： 当我们用到 `fill`（或者 [`clip`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clip)和[`isPointinPath`](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/isPointInPath) ）你可以选择一个填充规则，该填充规则根据某处在路径的外面或者里面来决定该处是否被填充，这对于自己与自己路径相交或者路径被嵌套的时候是有用的。可选值：`nonzero`（非零环绕规则，默认）、`evenodd`（奇偶环绕规则） 。
 
 ### 绘制命令
 
-1. 绘制和清空矩形
+1. `ctx.canvas`，获取当前上下文所属的canvas元素
+
+2. 绘制和清空矩形
 
    - `fillRect(x, y, width, height)`
    - `strokeRect(x, y, width, height)`
    - `clearRect(x, y, width, height)`
 
-2. 命令
+3. 命令
 
    - `beginPath()`
    - `closePath()`
@@ -29,17 +31,18 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
    - `save()` 保存画布的所有状态，canvas状态存储在栈中，绘画状态包括样式、变换和当前的裁切路径（clipping path）
    - `restore()` 恢复canvas画布的状态，从栈中弹出上一个保存的状态
 
-3. 路径命令
+4. 路径命令
 
    - `moveTo(x, y)`
    - `lineTo(x, y)`
    - `arc(x, y, radius, startAngle, endAngle, anticlockwise = false)` (x, y)是圆心位置，使用弧度，默认顺时针
    - `arcTo(x1, y1, x2, y2, radius)`  (x1, y1)和(x2, y2)是两个控制点，绘制的线不一定经过这两个点。根据这两个控制点和半径画弧，再将弧线起点和这个命令前的点用直线连起来。
-   - quadraticCurveTo(xp1x, cp1y, x, y) 二次贝塞尔曲线
-   - bezierCurveTo(xp1x, cp1y, cp2x, cp2y, x, y) 三次贝塞尔曲线
-   - rect(x, y, width, height) 矩形路径，但不会绘制出来
+   - `quadraticCurveTo(xp1x, cp1y, x, y)` 二次贝塞尔曲线
+   - `bezierCurveTo(xp1x, cp1y, cp2x, cp2y, x, y)` 三次贝塞尔曲线
+   - `rect(x, y, width, height)` 矩形路径，但不会绘制出来
+   - `ellipse(cx, cy, rx, ry, rotation, startAngle, endAngle, anticlockwise = false)`，椭圆路径，实验阶段，使用弧度
 
-4. Path2D对象
+5. Path2D对象
 
    - 通过Path2D对象可以用来缓存或记录绘画命令，简化代码和提高性能
 
@@ -49,7 +52,7 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
    - `path.addPath(path2[, transform])` 添加一条路径到当前路径，transform是一个可选的变换矩阵对象
    - 将Path2D对象实例作为参数传递给`stroke(path)`和`fill(path)`方法，来实现绘制该Path2D路径而不是当前路径
 
-5. 样式
+6. 样式
 
    - `fillStyle = color` color可以使颜色字符串、渐变对象或图案对象，默认为黑色#000
    - `strokeStyle = color`
@@ -62,34 +65,34 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
    - `setLineDash(segments)` 设置当前虚线样式，参数是个偶数个数的数组
    - `lineDashOffset = value` 设置虚线样式的其实偏移量
 
-6. 渐变
+7. 渐变
 
    - `createLinearGradient(x1, y1, x2, y2)` 线性渐变
    - `createRadialGradient(cx1, cy1, r1, cx2, cy2, r2)` 径向渐变，(cx1, cy1, r1) 和 (cx2, cy2, r2)分别定义两个圆
    - `gradient.addColorStop(position, color)` position为0.0~1.0的数值，表示颜色所在的相对位置，color是CSS颜色值
 
-7. 图案样式 Patterns
+8. 图案样式 Patterns
 
    - `createPattern(image, type)`image可以使一个Image对象的引用，或者另一个canvas对象。type必须是以下字符串值之一：repeat | repeat-x | repeat-y | no-repeat。
 
-8. 阴影 Shadows
+9. 阴影 Shadows
 
    - `shadowOffsetX = float` 引用在X轴的延伸距离，不受变换矩阵影响。默认为0，可以是负值
    - `shadowOffsetY = float` 基本同上
    - `shadowBlur = float` 设定阴影的模糊程度，其数值并不跟像素数量挂钩，也不受变换矩阵影响，默认为0
    - `shadowColor = color` 阴影颜色，标准的CSS颜色值，默认为全透明的黑色
 
-9. 绘制文本
+10. 绘制文本
 
-   - `fillText(text, x, y[, maxWidth])`
-   - `strokeText(text, x, y[, maxWidth])`
-   - `font = value`， 默认为`10px sans-serif`，和CSS `font`属性相同的语法，必须包含font-size和font-family
-   - `textAlign = value`，文本对齐方式，可选值：start（默认） | end | left | right | center
-   - `textBaseline = value`，基线对齐方式，可选值：top | hanging | middle | alphabetic（默认）| ideographic | bottom
-   - `direction = value`，文本方向，可选值：ltr | rtl | inherit（默认）
-   - `measureText(text)`，返回一个`TextMetrics`对象，包含宽度、所在像素
+    - `fillText(text, x, y[, maxWidth])`
+    - `strokeText(text, x, y[, maxWidth])`
+    - `font = value`， 默认为`10px sans-serif`，和CSS `font`属性相同的语法，必须包含font-size和font-family
+    - `textAlign = value`，文本对齐方式，可选值：start（默认） | end | left | right | center
+    - `textBaseline = value`，基线对齐方式，可选值：top | hanging | middle | alphabetic（默认）| ideographic | bottom
+    - `direction = value`，文本方向，可选值：ltr | rtl | inherit（默认）
+    - `measureText(text)`，返回一个`TextMetrics`对象，包含宽度、所在像素
 
-10. 绘制图片
+11. 绘制图片
 
     - 支持浏览器支持的任意格式图片，也可以使用页面中其他canvas元素作为图片源，支持以下类型：
       - `HTMLImageElement`：由Image()函数构造出来，或者任何\<img>元素
@@ -100,7 +103,7 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
     - `drawImage(image, x, y, width, height)`，width和height用来控制绘制图片时应该缩放的大小
     - `drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)`，裁取源图片中(sx, sy, sWidth, sHeight)位置和大小的部分，绘制到canvas的(dx, dy, dWidth, dHeight)位置和大小区域内
 
-11. 矩阵变换
+12. 矩阵变换
 
     - `translate(x, y)`，平移，会改变canvas的原点位置
 
@@ -132,13 +135,29 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
 
     - `resetTransform()`，重置当前变形为单位矩阵，相当于：`ctx.setTransform(1, 0, 0, 1, 0, 0)`
 
-12. 组合
+13. 组合
 
     - `globalCompositeOperation = type`，设置要在绘制新形状时应用的合成操作的类型，可选值有：source-over（默认）| source-in | source-out | source-atop | destination-over 等等
 
-13. 裁切路径
+14. 裁切路径
 
     - `clip()`，将当前正在构建的路径转换为当前的裁切路径，裁切路径用于遮罩，隐藏不需要的部分，裁切需要的图形，本身不会绘制。默认情况下，canvas有一个和它一样大的裁切路径（也就是没有裁切效果）。一般最好结合save()/restore()使用
+
+15. 事件交互的关键判断方法
+
+    - `isPointInPath()`，判断当前路径是否包含检测点，返回结果是boolean值
+
+      ```js
+      isPointInPath(x, y[, fillRule])
+      isPointInPath(path, x, y[, fillRule])
+      ```
+
+    - `isPointInStroke()`，判断点是否在路径的描边线上。
+
+      ```js
+      isPathInStroke(x, y)
+      isPathInStroke(path, x, y)
+      ```
 
 ### 动画
 
