@@ -145,7 +145,7 @@ Canvas API提供了通过JavaScript和HTML的\<canvas>元素来绘制图形的�
 
 15. 事件交互的关键判断方法
 
-    - `isPointInPath()`，判断当前路径是否包含检测点，返回结果是boolean值
+    - `isPointInPath()`，判断当前路径是否包含检测点，返回结果是boolean值。path参数是Path2D路径。
 
       ```js
       isPointInPath(x, y[, fillRule])
